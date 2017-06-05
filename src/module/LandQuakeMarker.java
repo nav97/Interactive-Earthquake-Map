@@ -12,11 +12,8 @@ public class LandQuakeMarker extends EarthquakeMarker {
 	
 	
 	public LandQuakeMarker(PointFeature quake) {
-		
 		// calling EarthquakeMarker constructor
 		super(quake);
-		
-		// setting field in earthquake marker
 		isOnLand = true;
 	}
 
@@ -27,7 +24,6 @@ public class LandQuakeMarker extends EarthquakeMarker {
 		pg.ellipse(x, y, 2*radius, 2*radius);
 		
 	}
-	
 
 	// Get the country the earthquake is in
 	public String getCountry() {

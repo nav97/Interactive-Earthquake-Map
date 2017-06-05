@@ -24,8 +24,9 @@ public abstract class EarthquakeMarker extends CommonMarker
 	//size of info box
 	public static int INFO_HEIGHT = 80;
 
-	// constants for distance
+	// constants for distance and radius multiplier
 	protected static final float kmPerMile = 1.6f;
+    protected static final float radiusMultip = 1.75f;
 	
 	/** Greater than or equal to this threshold is a moderate earthquake */
 	public static final float THRESHOLD_MODERATE = 5;
@@ -37,16 +38,13 @@ public abstract class EarthquakeMarker extends CommonMarker
 	/** Greater than or equal to this threshold is a deep depth */
 	public static final float THRESHOLD_DEEP = 300;
 
-	// ADD constants for colors if you want
-
 	
 	// abstract method implemented in derived classes
 	public abstract void drawEarthquake(PGraphics pg, float x, float y);
 		
 	
 	// constructor
-	public EarthquakeMarker (PointFeature feature) 
-	{
+	public EarthquakeMarker (PointFeature feature) {
 		super(feature.getLocation());
 		// Add a radius property and then set the properties
 		java.util.HashMap<String, Object> properties = feature.getProperties();
@@ -63,13 +61,13 @@ public abstract class EarthquakeMarker extends CommonMarker
 		// save previous styling
 		pg.pushStyle();
 			
-		// determine color of marker from depth
-		colorDetermine(pg);
+		// determine colour of marker from depth
+		colourDetermine(pg);
 		
 		// call abstract method implemented in child class to draw marker shape
 		drawEarthquake(pg, x, y);
 		
-		// IMPLEMENT: add X over marker if within past day		
+		// add X over marker if within past day
 		String age = getStringProperty("age");
 		if ("Past Hour".equals(age) || "Past Day".equals(age)) {
 			
@@ -93,8 +91,7 @@ public abstract class EarthquakeMarker extends CommonMarker
 
 	/** Show the title of the earthquake if this marker is selected */
 	@Override
-	public void showTitle(PGraphics pg, float x, float y)
-	{
+	public void showTitle(PGraphics pg, float x, float y) {
 		if(this.isSelected()){
 
 			String tempTitle = getTitle(); //Strip magnitude
@@ -138,9 +135,9 @@ public abstract class EarthquakeMarker extends CommonMarker
 		return km;
 	}
 	
-	// determine color of marker from depth
+	// determine colour of marker from depth
 	// We use: Deep = red, intermediate = blue, shallow = yellow
-	private void colorDetermine(PGraphics pg) {
+	private void colourDetermine(PGraphics pg) {
 		float depth = getDepth();
 		
 		if (depth < THRESHOLD_INTERMEDIATE) {

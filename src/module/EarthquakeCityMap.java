@@ -22,17 +22,8 @@ import processing.core.PApplet;
  * @author nav97
  * */
 public class EarthquakeCityMap extends PApplet {
-	
-	// We will use member variables, instead of local variables, to store the data
-	// that the setup and draw methods will need to access (as well as other methods)
-	// You will use many of these variables, but the only one you should need to add
-	// code to modify is countryQuakes, where you will store the number of earthquakes
-	// per country.
-	
-	// You can ignore this.  It's to get rid of eclipse warnings
-	private static final long serialVersionUID = 1L;
 
-	// IF YOU ARE WORKING OFFILINE, change the value of this variable to true
+	// IF YOU ARE WORKING OFFLINE, change the value of this variable to true
 	private static final boolean offline = false;
 	
 	/** This is where to find the local tiles, for working without an Internet connection */
@@ -56,11 +47,12 @@ public class EarthquakeCityMap extends PApplet {
 	// A List of country markers
 	private List<Marker> countryMarkers;
 	
-	// NEW IN MODULE 5
+	// For click functionality
 	private CommonMarker lastSelected;
 	private CommonMarker lastClicked;
-	
-	public void setup() {		
+
+	//Runs once when applet is started
+	public void setup() {
 		// (1) Initializing canvas and map tiles
 		size(900, 700, OPENGL);
 		if (offline) {
@@ -68,26 +60,25 @@ public class EarthquakeCityMap extends PApplet {
 		    earthquakesURL = "2.5_week.atom";  // The same feed, but saved August 7, 2015
 		}
 		else {
-			map = new UnfoldingMap(this, 200, 50, 650, 600, new Microsoft.HybridProvider());
-			// IF YOU WANT TO TEST WITH A LOCAL FILE, uncomment the next line
-		    //earthquakesURL = "2.5_week.atom";
+			//map = new UnfoldingMap(this, 200, 50, 650, 600, new Microsoft.HybridProvider());
+			map = new UnfoldingMap(this, new Microsoft.HybridProvider());
 		}
 		MapUtils.createDefaultEventDispatcher(this, map);
 		
 		
 		// (2) Reading in earthquake data and geometric properties
-	    //     STEP 1: load country features and markers
+	    // STEP 1: load country features and markers
 		List<Feature> countries = GeoJSONReader.loadData(this, countryFile);
 		countryMarkers = MapUtils.createSimpleMarkers(countries);
 		
-		//     STEP 2: read in city data
+		// STEP 2: read in city data
 		List<Feature> cities = GeoJSONReader.loadData(this, cityFile);
 		cityMarkers = new ArrayList<Marker>();
 		for(Feature city : cities) {
 		  cityMarkers.add(new CityMarker(city));
 		}
 	    
-		//     STEP 3: read in earthquake RSS feed
+		// STEP 3: read in earthquake RSS feed
 	    List<PointFeature> earthquakes = ParseFeed.parseEarthquake(this, earthquakesURL);
 	    quakeMarkers = new ArrayList<Marker>();
 	    
@@ -106,27 +97,23 @@ public class EarthquakeCityMap extends PApplet {
 	    printQuakes();
 	 		
 	    // (3) Add markers to map
-	    //     NOTE: Country markers are not added to the map.  They are used
-	    //           for their geometric properties
+	    // NOTE: Country markers are not added to the map. They are used for their geometric properties
 	    map.addMarkers(quakeMarkers);
 	    map.addMarkers(cityMarkers);
-	    
-	}  // End setup
+	}
 	
 	
 	public void draw() {
 		background(0);
 		map.draw();
 		addKey();
-		
 	}
 	
 	/** Event handler that gets called automatically when the 
 	 * mouse moves.
 	 */
 	@Override
-	public void mouseMoved()
-	{
+	public void mouseMoved() {
 		// clear the last selection
 		if (lastSelected != null) {
 			lastSelected.setSelected(false);
@@ -140,9 +127,7 @@ public class EarthquakeCityMap extends PApplet {
 	// If there is a marker under the cursor, and lastSelected is null 
 	// set the lastSelected to be the first marker found under the cursor
 	// Make sure you do not select two markers.
-	// 
-	private void selectMarkerIfHover(List<Marker> markers)
-	{
+	private void selectMarkerIfHover(List<Marker> markers) {
 		if(lastSelected != null){
 			return;
 		}
@@ -162,8 +147,7 @@ public class EarthquakeCityMap extends PApplet {
 	 * where the city is in the threat circle
 	 */
 	@Override
-	public void mouseClicked()
-	{
+	public void mouseClicked() {
 		//if something was prev clicked,
 		//un-click by showing all markers
 		if(lastClicked !=null){
@@ -252,8 +236,7 @@ public class EarthquakeCityMap extends PApplet {
 	}
 	
 	// helper method to draw key in GUI
-	private void addKey() {	
-		// Remember you can use Processing's graphics methods here
+	private void addKey() {
 		fill(255, 250, 240);
 		
 		int xbase = 25;
@@ -282,10 +265,7 @@ public class EarthquakeCityMap extends PApplet {
 		text("Size ~ Magnitude", xbase+25, ybase+110);
 		
 		fill(255, 255, 255);
-		ellipse(xbase+35, 
-				ybase+70, 
-				10, 
-				10);
+		ellipse(xbase+35, ybase+70, 10, 10);
 		rect(xbase+35-5, ybase+90-5, 10, 10);
 		
 		fill(color(255, 255, 0));
@@ -311,19 +291,15 @@ public class EarthquakeCityMap extends PApplet {
 		strokeWeight(2);
 		line(centerx-8, centery-8, centerx+8, centery+8);
 		line(centerx-8, centery+8, centerx+8, centery-8);
-			
 	}
 
-	
-	
+
 	// Checks whether this quake occurred on land.  If it did, it sets the 
 	// "country" property of its PointFeature to the country where it occurred
 	// and returns true.  Notice that the helper method isInCountry will
 	// set this "country" property already.  Otherwise it returns false.	
 	private boolean isLand(PointFeature earthquake) {
-		
-		// IMPLEMENT THIS: loop over all countries to check if location is in any of them
-		// If it is, add 1 to the entry in countryQuakes corresponding to this country.
+
 		for (Marker country : countryMarkers) {
 			if (isInCountry(earthquake, country)) {
 				return true;
@@ -362,7 +338,6 @@ public class EarthquakeCityMap extends PApplet {
 	// helper method to test whether a given earthquake is in a given country
 	// This will also add the country property to the properties of the earthquake feature if 
 	// it's in one of the countries.
-	// You should not have to modify this code
 	private boolean isInCountry(PointFeature earthquake, Marker country) {
 		// getting location of feature
 		Location checkLoc = earthquake.getLocation();
@@ -387,7 +362,6 @@ public class EarthquakeCityMap extends PApplet {
 		// check if inside country represented by SimplePolygonMarker
 		else if(((AbstractShapeMarker)country).isInsideByLocation(checkLoc)) {
 			earthquake.addProperty("country", country.getProperty("name"));
-			
 			return true;
 		}
 		return false;
