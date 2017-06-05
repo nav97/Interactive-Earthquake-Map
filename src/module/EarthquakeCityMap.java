@@ -11,7 +11,6 @@ import de.fhpotsdam.unfolding.geo.Location;
 import de.fhpotsdam.unfolding.marker.AbstractShapeMarker;
 import de.fhpotsdam.unfolding.marker.Marker;
 import de.fhpotsdam.unfolding.marker.MultiMarker;
-import de.fhpotsdam.unfolding.providers.MBTilesMapProvider;
 import de.fhpotsdam.unfolding.providers.Microsoft;
 import de.fhpotsdam.unfolding.utils.MapUtils;
 import parsing.ParseFeed;
@@ -23,12 +22,6 @@ import processing.core.PApplet;
  * */
 public class EarthquakeCityMap extends PApplet {
 
-	// IF YOU ARE WORKING OFFLINE, change the value of this variable to true
-	private static final boolean offline = false;
-	
-	/** This is where to find the local tiles, for working without an Internet connection */
-	public static String mbTilesString = "blankLight-1-3.mbtiles";
-	
 	//feed with magnitude 2.5+ Earthquakes
 	private String earthquakesURL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.atom";
 	
@@ -54,15 +47,9 @@ public class EarthquakeCityMap extends PApplet {
 	//Runs once when applet is started
 	public void setup() {
 		// (1) Initializing canvas and map tiles
-		size(900, 700, OPENGL);
-		if (offline) {
-		    map = new UnfoldingMap(this, 200, 50, 650, 600, new MBTilesMapProvider(mbTilesString));
-		    earthquakesURL = "2.5_week.atom";  // The same feed, but saved August 7, 2015
-		}
-		else {
-			//map = new UnfoldingMap(this, 200, 50, 650, 600, new Microsoft.HybridProvider());
-			map = new UnfoldingMap(this, new Microsoft.HybridProvider());
-		}
+		size(1200, 900, OPENGL);
+		//map = new UnfoldingMap(this, 200, 50, 650, 600, new Microsoft.HybridProvider());
+		map = new UnfoldingMap(this, new Microsoft.HybridProvider());
 		MapUtils.createDefaultEventDispatcher(this, map);
 		
 		

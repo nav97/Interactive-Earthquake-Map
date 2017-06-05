@@ -26,8 +26,7 @@ public abstract class EarthquakeMarker extends CommonMarker
 
 	// constants for distance and radius multiplier
 	protected static final float kmPerMile = 1.6f;
-    protected static final float radiusMultip = 1.75f;
-	
+
 	/** Greater than or equal to this threshold is a moderate earthquake */
 	public static final float THRESHOLD_MODERATE = 5;
 	/** Greater than or equal to this threshold is a light earthquake */
@@ -125,9 +124,9 @@ public abstract class EarthquakeMarker extends CommonMarker
 	/**
 	 * Return the "threat circle" radius, or distance up to 
 	 * which this earthquake can affect things, for this earthquake.   
-	 * DISCLAIMER: this formula is for illustration purposes
-	 *  only and is not intended to be used for safety-critical 
-	 *  or predictive applications.
+	 * this formula is for illustration purposes
+	 * only and is not intended to be used for safety-critical
+	 * or predictive applications.
 	 */
 	public double threatCircle() {	
 		double miles = 20.0f * Math.pow(1.8, 2*getMagnitude()-5);
@@ -136,7 +135,7 @@ public abstract class EarthquakeMarker extends CommonMarker
 	}
 	
 	// determine colour of marker from depth
-	// We use: Deep = red, intermediate = blue, shallow = yellow
+	// Deep = red, intermediate = blue, shallow = yellow
 	private void colourDetermine(PGraphics pg) {
 		float depth = getDepth();
 		
@@ -155,7 +154,6 @@ public abstract class EarthquakeMarker extends CommonMarker
 	/*
 	 * getters for earthquake properties
 	 */
-	
 	public float getMagnitude() {
 		return Float.parseFloat(getProperty("magnitude").toString());
 	}
@@ -174,8 +172,5 @@ public abstract class EarthquakeMarker extends CommonMarker
 	{
 		return isOnLand;
 	}
-	
 
-	
-	
 }

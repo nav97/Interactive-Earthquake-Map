@@ -11,7 +11,6 @@ import processing.data.XML;
 
 public class ParseFeed {
 
-
 	/*
 	 * This method is to parse a GeoRSS feed corresponding to earthquakes around
 	 * the globe.
